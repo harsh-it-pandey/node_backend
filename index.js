@@ -14,9 +14,11 @@
 const express = require('express');
 const app = express();
 const db = require('./db'); // Ensure MongoDB connection works
-const bodyParser = require('body-parser');
+require('dotenv').config();
 
+const bodyParser = require('body-parser');
 app.use(bodyParser.json()); // Allows JSON request bodies
+const PORT = process.env.PORT || 4826;
 
 const Person = require('./models/Person'); // Ensure filename matches exactly
 const MenuItem = require('./models/MenuItem');
@@ -35,8 +37,10 @@ const menuItemRoutes = require('./routes/menuItemRoutes');
 app.use('/Person',personRoutes);
 app.use('/menu',menuItemRoutes);
 
+
+
 // Start the server
-app.listen(4826, () => {
+app.listen(PORT, () => {
     console.log('Server is running on http://localhost:4826');
 });
 
