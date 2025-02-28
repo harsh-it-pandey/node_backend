@@ -16,15 +16,35 @@ const app = express();
 const db = require('./db'); // Ensure MongoDB connection works
 require('dotenv').config();
 
+//const { overwriteMiddlewareResult } = require('mongoose');
+
+const passport = require('./auth');
+
 const bodyParser = require('body-parser');
 app.use(bodyParser.json()); // Allows JSON request bodies
 const PORT = process.env.PORT || 4826;
 
-const Person = require('./models/Person'); // Ensure filename matches exactly
-const MenuItem = require('./models/MenuItem');
 
+
+//const Person = require('./models/Person'); // Ensure filename matches exactly
+//const MenuItem = require('./models/MenuItem');
+
+
+//middleware function --------
+const logRequest = (req,res,next)=>{
+    console.log(`[${new Date().toLocaleString()}]Request made to : ${req.url}`);
+    next();//move on to the next phase
+}
+
+app.use(logRequest);
+
+
+
+
+app.use(passport.initialize());
+const localAuthMiddleWare = passport.authenticate('local',{session : false});
 // Basic route
-app.get('/', (req, res) => {
+app.get('/',localAuthMiddleWare, (req, res) => {
     res.send('WELCOME TO OUR HOTEL');
 });
 
